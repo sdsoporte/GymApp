@@ -18,3 +18,5 @@ node_modules/
 dist/
 build/
 *.tsbuildinfo
+apps/web/src/routeTree.gen.ts
+
