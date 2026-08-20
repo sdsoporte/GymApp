@@ -5,6 +5,9 @@
 # Secrets
 .env
 
+# Dataset download cache (tarballs are large and fetched on demand)
+.cache/
+
 # Static assets (mounted at runtime)
 assets/exercises/
 
