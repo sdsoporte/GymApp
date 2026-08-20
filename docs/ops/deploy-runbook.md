@@ -32,19 +32,35 @@ Domain: `https://api.gymapp.elautomata.com`
    pnpm -F @gymapp/web exec tsc --noEmit -p tsconfig.json
    ```
 
-3. Apply database migrations:
+3. Prepare the exercise dataset:
+
+   See [dataset-runbook.md](./dataset-runbook.md) for details. On nodo-a the
+   dataset should already be mirrored at `/data/devaai/gymapp/mirror/`:
+
+   ```bash
+   export MIRROR_URL="https://mirror.nodo-a.example/exercises-7455efae41b330c265e7cd4b78dfa848e7ce5ebd.tar.gz"
+   ./scripts/download-exercises.sh /data/devaai/gymapp/app/assets/exercises
+   ```
+
+4. Apply database migrations:
 
    ```bash
    DATABASE_URL="$DATABASE_URL" pnpm -F @gymapp/db migrate
    ```
 
-4. Validate compose configuration:
+5. Seed the exercise catalog:
+
+   ```bash
+   DATABASE_URL="$DATABASE_URL" pnpm -F @gymapp/db seed
+   ```
+
+6. Validate compose configuration:
 
    ```bash
    docker compose -f docker-compose.prod.yml config -q
    ```
 
-5. Build and start services:
+7. Build and start services:
 
    ```bash
    docker compose -f docker-compose.prod.yml up -d --build
@@ -59,6 +75,14 @@ curl -sf https://api.gymapp.elautomata.com/health/db
 
 # /metrics must NOT be reachable on the public port
 curl -sf https://api.gymapp.elautomata.com/metrics || test $? -eq 22
+
+# Sample exercise media must be served by the assets container
+curl -sfI https://assets.gymapp.elautomata.com/exercises/videos/0001-2gPfomN.gif
+
+# Exercise count in production must match the dataset
+docker compose -f docker-compose.prod.yml exec -T postgres \
+  psql "$DATABASE_URL" -c 'select count(*) from exercises'
+# Expected: 1324
 
 # Internal Prometheus target must be up (scraped over docker network)
 # Verify in Prometheus UI that job `gymapp` target `api:3001/metrics` is UP.
