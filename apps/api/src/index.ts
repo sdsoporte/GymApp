@@ -1,6 +1,10 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { db, sql } from '@gymapp/db';
+import { appRouter } from './trpc/router.js';
+import { createContext } from './trpc/context.js';
 
 const app = new Hono();
 
@@ -14,6 +18,16 @@ app.get('/health/db', async (c) => {
     return c.json({ status: 'error', database: 'unreachable' }, 503);
   }
 });
+
+app.use('/trpc/*', cors({ origin: '*' }));
+app.use('/trpc/*', (c) =>
+  fetchRequestHandler({
+    endpoint: '/trpc',
+    req: c.req.raw,
+    router: appRouter,
+    createContext,
+  })
+);
 
 const port = Number(process.env.PORT || '3000');
 
