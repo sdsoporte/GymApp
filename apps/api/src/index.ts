@@ -15,9 +15,18 @@ app.get('/health/db', async (c) => {
   }
 });
 
+const port = Number(process.env.PORT || '3000');
+
+serve({
+  fetch: app.fetch,
+  port,
+});
+
+// Internal metrics listener — not exposed via Traefik
+const metricsApp = new Hono();
 let requestCount = 0;
 
-app.get('/metrics', (c) => {
+metricsApp.get('/metrics', (c) => {
   if (process.env.METRICS_ENABLED !== 'true') {
     return c.notFound();
   }
@@ -26,9 +35,9 @@ app.get('/metrics', (c) => {
   return c.text(body, 200, { 'Content-Type': 'text/plain; version=0.0.4' });
 });
 
-const port = Number(process.env.PORT || '3000');
+const metricsPort = Number(process.env.METRICS_PORT || '3001');
 
 serve({
-  fetch: app.fetch,
-  port,
+  fetch: metricsApp.fetch,
+  port: metricsPort,
 });

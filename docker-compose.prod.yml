@@ -21,9 +21,12 @@ services:
       PORT: 3000
       DATABASE_URL: ${DATABASE_URL}
       METRICS_ENABLED: ${METRICS_ENABLED:-false}
+      METRICS_PORT: 3001
     networks:
       - proxy-net
       - devaai_services-prod
+    expose:
+      - "3001"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.gymapp-api.rule=Host(`api.gymapp.elautomata.com`)"
