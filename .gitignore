@@ -1,3 +1,17 @@
 # Local Pi runtime state
 .atl/
 .pi/
+
+# Secrets
+.env
+
+# Static assets (mounted at runtime)
+assets/exercises/
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
