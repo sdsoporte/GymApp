@@ -23,8 +23,10 @@ services:
       PORT: 3000
       DATABASE_URL: ${DATABASE_URL}
       METRICS_ENABLED: ${METRICS_ENABLED:-false}
+      METRICS_PORT: 3001
     ports:
       - "3000:3000"
+      - "3001:3001"
     depends_on:
       postgres:
         condition: service_healthy

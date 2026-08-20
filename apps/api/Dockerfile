@@ -10,4 +10,5 @@ COPY packages/shared ./packages/shared
 COPY packages/db ./packages/db
 WORKDIR /app/apps/api
 EXPOSE 3000
+EXPOSE 3001
 CMD ["pnpm", "start"]
