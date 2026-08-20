@@ -1,0 +1,55 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    networks:
+      - proxy-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gymapp-web.rule=Host(`gymapp.elautomata.com`)"
+      - "traefik.http.routers.gymapp-web.entrypoints=websecure"
+      - "traefik.http.routers.gymapp-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gymapp-web.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy-net"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL}
+      METRICS_ENABLED: ${METRICS_ENABLED:-false}
+    networks:
+      - proxy-net
+      - devaai_services-prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gymapp-api.rule=Host(`api.gymapp.elautomata.com`)"
+      - "traefik.http.routers.gymapp-api.entrypoints=websecure"
+      - "traefik.http.routers.gymapp-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gymapp-api.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy-net"
+
+  assets:
+    build:
+      context: ./assets
+      dockerfile: Dockerfile
+    volumes:
+      - ./assets/exercises:/usr/share/nginx/html/exercises:ro
+    networks:
+      - proxy-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gymapp-assets.rule=Host(`assets.gymapp.elautomata.com`)"
+      - "traefik.http.routers.gymapp-assets.entrypoints=websecure"
+      - "traefik.http.routers.gymapp-assets.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gymapp-assets.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy-net"
+
+networks:
+  proxy-net:
+    external: true
+  devaai_services-prod:
+    external: true
