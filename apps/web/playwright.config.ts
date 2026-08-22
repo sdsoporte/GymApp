@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import path from 'node:path';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const runPwa = process.env.E2E_PWA === 'true';
 
 export default defineConfig({
   testDir: './e2e/specs',
@@ -23,7 +24,21 @@ export default defineConfig({
     {
       name: 'mobile-chromium',
       use: { ...devices['Pixel 5'] },
+      testIgnore: '**/pwa.spec.ts',
     },
+    ...(runPwa
+      ? [
+          {
+            name: 'mobile-pwa-smoke',
+            use: {
+              ...devices['Pixel 5'],
+              baseURL: 'http://localhost:4173',
+              serviceWorkers: 'allow',
+            },
+            testMatch: '**/pwa.spec.ts',
+          },
+        ]
+      : []),
   ],
   globalSetup: path.resolve('./e2e/global-setup.ts'),
   webServer: [
@@ -48,5 +63,18 @@ export default defineConfig({
       },
       timeout: 120_000,
     },
+    ...(runPwa
+      ? [
+          {
+            command: 'pnpm --filter @gymapp/web preview --port 4173',
+            url: 'http://localhost:4173',
+            reuseExistingServer: false,
+            env: {
+              E2E: 'true',
+            },
+            timeout: 120_000,
+          },
+        ]
+      : []),
   ],
 });

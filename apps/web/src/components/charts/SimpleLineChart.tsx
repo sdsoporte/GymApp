@@ -18,9 +18,10 @@ interface SimpleLineChartProps {
   label: string;
   unit?: string;
   color?: string;
+  'data-testid'?: string;
 }
 
-export function SimpleLineChart({ data, label, unit = '', color = 'var(--color-primary)' }: SimpleLineChartProps) {
+export function SimpleLineChart({ data, label, unit = '', color = 'var(--color-primary)', 'data-testid': dataTestId }: SimpleLineChartProps) {
   const valid = data.filter((d) => d.value != null);
   const latest = valid[valid.length - 1];
   const max = valid.length
@@ -28,7 +29,7 @@ export function SimpleLineChart({ data, label, unit = '', color = 'var(--color-p
     : null;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-testid={dataTestId}>
       <div aria-hidden="true" className="h-64 w-full md:h-80">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>

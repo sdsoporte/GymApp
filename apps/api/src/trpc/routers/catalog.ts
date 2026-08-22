@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { and, count, eq, ilike, or } from 'drizzle-orm';
+import { and, asc, count, eq, ilike, or } from 'drizzle-orm';
 import { exercises } from '@gymapp/db/schema';
 import { publicProcedure, router } from '../trpc.js';
 
@@ -9,7 +9,7 @@ const listInput = z.object({
   muscleGroup: z.string().optional(),
   equipment: z.string().optional(),
   target: z.string().optional(),
-  limit: z.coerce.number().int().min(1).max(100).default(50),
+    limit: z.coerce.number().int().min(1).max(200).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 });
 
@@ -65,6 +65,7 @@ export const catalogRouter = router({
           })
           .from(exercises)
           .where(where)
+          .orderBy(asc(exercises.name))
           .limit(input.limit)
           .offset(input.offset),
       ]);

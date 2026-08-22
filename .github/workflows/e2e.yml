@@ -1,0 +1,76 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      E2E: 'true'
+      TEST_DATABASE_URL: postgres://gymapp_e2e:gymapp_e2e@localhost:5433/gymapp_e2e
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @gymapp/web exec playwright install --with-deps chromium
+
+      - name: Start E2E compose stack
+        run: docker compose -f docker-compose.e2e.yml up -d --wait
+
+      - name: Run database migrations
+        run: pnpm --filter @gymapp/db migrate
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+
+      - name: Seed exercises catalog
+        run: pnpm --filter @gymapp/db seed
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+
+      - name: Build web app for PWA smoke
+        run: pnpm --filter @gymapp/web build
+
+      - name: Run E2E suite
+        run: pnpm --filter @gymapp/web exec playwright test --project=mobile-chromium
+
+      - name: Run PWA smoke
+        run: E2E_PWA=true pnpm --filter @gymapp/web exec playwright test --project=mobile-pwa-smoke
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: apps/web/test-results/
+          retention-days: 7
+
+      - name: Stop compose stack
+        if: always()
+        run: docker compose -f docker-compose.e2e.yml down -v
