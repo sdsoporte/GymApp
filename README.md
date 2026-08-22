@@ -22,9 +22,15 @@ pnpm --filter @gymapp/web e2e
 
 # Modo UI para desarrollo
 pnpm --filter @gymapp/web e2e:ui
+
+# PWA smoke: requiere build previo para generar el service worker
+pnpm --filter @gymapp/web build
+pnpm --filter @gymapp/web e2e:pwa
 ```
 
 Requisitos: Docker, `E2E=true` y `TEST_DATABASE_URL` apuntando al puerto `5433` con una DB que termine en `_e2e`. El guard rechaza cualquier DB de producción o `DATABASE_URL` como fallback.
+
+El script `e2e:pwa` ya incluye `E2E=true`, `TEST_DATABASE_URL` y `E2E_PWA=true`; no hace falta exportarlos manualmente.
 
 ## Documentación
 

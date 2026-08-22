@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "e2e": "E2E=true TEST_DATABASE_URL=postgres://gymapp_e2e:gymapp_e2e@localhost:5433/gymapp_e2e playwright test",
     "e2e:ui": "E2E=true TEST_DATABASE_URL=postgres://gymapp_e2e:gymapp_e2e@localhost:5433/gymapp_e2e playwright test --ui",
+    "e2e:pwa": "E2E=true TEST_DATABASE_URL=postgres://gymapp_e2e:gymapp_e2e@localhost:5433/gymapp_e2e E2E_PWA=true playwright test --project=mobile-pwa-smoke",
     "e2e:install": "playwright install chromium"
   },
   "dependencies": {
