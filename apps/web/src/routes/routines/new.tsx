@@ -6,6 +6,12 @@ export const Route = createFileRoute('/routines/new')({ component: NewRoutinePag
 
 function NewRoutinePage() {
   const navigate = useNavigate();
-  const create = trpc.routines.create.useMutation({ onSuccess: () => navigate({ to: '/routines' }) });
+  const utils = trpc.useUtils();
+  const create = trpc.routines.create.useMutation({
+    onSuccess: async () => {
+      await utils.routines.invalidate();
+      navigate({ to: '/routines' });
+    },
+  });
   return <RoutineForm onSubmit={async (values) => { await create.mutateAsync(values); }} isPending={create.isPending} />;
 }

@@ -12,12 +12,19 @@ export const Route = createFileRoute('/routines/$id')({
 function EditRoutinePage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const utils = trpc.useUtils();
   const detail = trpc.routines.byId.useQuery({ id });
   const update = trpc.routines.update.useMutation({
-    onSuccess: () => navigate({ to: '/routines' }),
+    onSuccess: async () => {
+      await utils.routines.invalidate();
+      navigate({ to: '/routines' });
+    },
   });
   const remove = trpc.routines.delete.useMutation({
-    onSuccess: () => navigate({ to: '/routines' }),
+    onSuccess: async () => {
+      await utils.routines.invalidate();
+      navigate({ to: '/routines' });
+    },
   });
 
   if (detail.isLoading) {
