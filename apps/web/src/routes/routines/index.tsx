@@ -57,7 +57,7 @@ function RoutinesPage() {
       </div>
       <div className="grid gap-3">
         {list.data.map((routine) => (
-          <Card key={routine.id} className="transition-colors hover:border-[var(--color-primary)]">
+          <Card key={routine.id} data-testid="routine-card" className="transition-colors hover:border-[var(--color-primary)]">
             <CardContent className="flex flex-col gap-3 py-4">
               <div className="flex items-center justify-between">
                 <Link to="/routines/$id" params={{ id: routine.id }} className="flex-1">
