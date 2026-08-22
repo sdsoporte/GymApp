@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { and, asc, eq, inArray, isNull } from 'drizzle-orm';
+import { and, asc, count, desc, eq, inArray, isNotNull, isNull, sql } from 'drizzle-orm';
 import { exercises, routineExercises, routines, sessionSets, workoutSessions } from '@gymapp/db/schema';
 import { publicProcedure, router } from '../trpc.js';
 
@@ -217,4 +217,41 @@ export const sessionsRouter = router({
 
     return sessionWithSets(ctx.db, input.id);
   }),
+
+  history: publicProcedure
+    .input(
+      z.object({
+        limit: z.coerce.number().int().min(1).max(100).default(20),
+        offset: z.coerce.number().int().min(0).default(0),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const where = isNotNull(workoutSessions.completedAt);
+
+      const [totalRes, rows] = await Promise.all([
+        ctx.db.select({ count: count() }).from(workoutSessions).where(where),
+        ctx.db
+          .select({
+            id: workoutSessions.id,
+            startedAt: workoutSessions.startedAt,
+            completedAt: workoutSessions.completedAt,
+            durationMinutes: sql<number>`ceil(extract(epoch from (${workoutSessions.completedAt} - ${workoutSessions.startedAt})) / 60)`,
+            routineName: routines.name,
+            totalSets: count(sessionSets.id),
+          })
+          .from(workoutSessions)
+          .leftJoin(routines, eq(workoutSessions.routineId, routines.id))
+          .leftJoin(sessionSets, eq(sessionSets.sessionId, workoutSessions.id))
+          .where(where)
+          .groupBy(workoutSessions.id, routines.name)
+          .orderBy(desc(workoutSessions.completedAt))
+          .limit(input.limit)
+          .offset(input.offset),
+      ]);
+
+      return {
+        total: totalRes[0]?.count ?? 0,
+        items: rows,
+      };
+    }),
 });
