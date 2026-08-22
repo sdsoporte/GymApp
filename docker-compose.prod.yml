@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
+        VITE_API_URL: ${VITE_API_URL:-https://api-gymapp.elautomata.com/trpc}
         VITE_ASSETS_URL: ${VITE_ASSETS_URL:-https://assets-gymapp.elautomata.com/exercises}
     networks:
       - proxy-net

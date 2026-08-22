@@ -11,7 +11,7 @@ export const trpc = createTRPCReact<AppRouter>();
 
 function getUrl() {
   if (typeof window === 'undefined') return 'http://localhost:3000/trpc';
-  return '/trpc';
+  return import.meta.env.VITE_API_URL ?? '/trpc';
 }
 
 const PERSISTED_QUERY_KEYS = new Set(['catalog', 'routines', 'sessions', 'progress']);
