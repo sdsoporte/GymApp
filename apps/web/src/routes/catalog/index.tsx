@@ -3,6 +3,7 @@ import { zodValidator } from '@tanstack/zod-adapter';
 import { z } from 'zod';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
+import { useNetworkStatus } from '@/lib/pwa';
 import { useDebounce } from '@/hooks/use-debounce';
 import { SearchBar } from '@/components/exercise/SearchBar';
 import { FilterSheet } from '@/components/exercise/FilterSheet';
@@ -42,6 +43,7 @@ function CatalogPage() {
 
   const offset = (search.page - 1) * LIMIT;
 
+  const online = useNetworkStatus();
   const facetsQuery = trpc.catalog.facets.useQuery();
   const listQuery = trpc.catalog.list.useQuery({
     q: debouncedQ,
@@ -73,6 +75,10 @@ function CatalogPage() {
       {listQuery.isLoading || facetsQuery.isLoading ? (
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
+        </div>
+      ) : !online && !listQuery.data ? (
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6 text-center text-red-200">
+          Sin conexión y sin caché disponible. Conectate a internet para cargar el catálogo.
         </div>
       ) : listQuery.isError ? (
         <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6 text-center text-red-200">
