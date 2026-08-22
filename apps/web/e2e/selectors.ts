@@ -4,6 +4,8 @@ export const testIds = {
   routineCard: 'routine-card',
   sessionExercise: 'session-exercise',
   historySessionRow: 'history-session-row',
+  progressWeightChart: 'progress-weight-chart',
+  bodyMetricRow: 'body-metric-row',
 } as const;
 
 export const labels = {
@@ -21,4 +23,13 @@ export const labels = {
   repsInputLabel: 'Reps',
   rpeInputLabel: 'RPE',
   historyHeading: 'Historial',
+  progressHeading: 'Progreso',
+  progressWeightLabel: 'Mejor peso por sesión',
+  bodyMetricsHeading: 'Métricas corporales',
+  bodyMetricDateLabel: 'Fecha y hora',
+  bodyMetricWeightLabel: 'Peso (kg)',
+  bodyMetricFatLabel: '% Grasa',
+  bodyMetricWaistLabel: 'Cintura (cm)',
+  newBodyMetric: 'Nueva',
+  saveBodyMetric: 'Guardar',
 } as const;

@@ -37,7 +37,7 @@ function ProgressPage() {
   const [showForm, setShowForm] = useState(false);
   const offset = (page - 1) * LIMIT;
 
-  const exercisesList = trpc.catalog.list.useQuery({ limit: 100, offset: 0 });
+  const exercisesList = trpc.catalog.list.useQuery({ limit: 200, offset: 0 });
   const weightQuery = trpc.progress.exerciseWeight.useQuery({ exerciseId }, { enabled: Boolean(exerciseId) });
   const metricsQuery = trpc.progress.bodyMetrics.list.useQuery({ limit: LIMIT, offset });
   const createMetric = trpc.progress.bodyMetrics.create.useMutation({ onSuccess: () => { setShowForm(false); metricsQuery.refetch(); } });
@@ -73,7 +73,7 @@ function ProgressPage() {
           {exercisesList.isLoading ? (
             <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
           ) : (
-            <Select value={exerciseId} onChange={(e) => setExerciseId(e.target.value)}>
+            <Select value={exerciseId} onChange={(e) => setExerciseId(e.target.value)} data-testid="exercise-progress-select">
               <option value="">Seleccionar ejercicio</option>
               {(exercisesList.data?.items ?? []).map((ex) => (
                 <option key={ex.id} value={ex.id}>{ex.nameEs || ex.name}</option>
@@ -84,7 +84,7 @@ function ProgressPage() {
             <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
           ) : exerciseId && weightData.length ? (
             <>
-              <SimpleLineChart data={weightData} label="Mejor peso por sesión" unit="kg" />
+              <SimpleLineChart data={weightData} label="Mejor peso por sesión" unit="kg" data-testid="progress-weight-chart" />
               <ul className="space-y-1 text-sm text-zinc-400">
                 {weightData.slice(-5).map((p, i) => <li key={i}>{p.label}: {p.value?.toFixed(1)}kg</li>)}
               </ul>
@@ -134,7 +134,7 @@ function ProgressPage() {
 
               <div className="space-y-2">
                 {metricRows.map((m) => (
-                  <div key={m.id} className="flex items-center justify-between rounded-lg border border-[var(--color-border)] p-3 text-sm">
+                  <div key={m.id} data-testid="body-metric-row" className="flex items-center justify-between rounded-lg border border-[var(--color-border)] p-3 text-sm">
                     <div>
                       <p className="font-medium">{formatDateShort(m.measuredAt)}</p>
                       <p className="text-zinc-400">
