@@ -1,4 +1,4 @@
-import { Dumbbell, Home, List, User } from 'lucide-react';
+import { Dumbbell, Home, LineChart, List, History } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 
@@ -6,7 +6,8 @@ const items = [
   { to: '/', icon: Home, label: 'Inicio' },
   { to: '/catalog', icon: Dumbbell, label: 'Catálogo' },
   { to: '/routines', icon: List, label: 'Rutinas' },
-  { to: '/profile', icon: User, label: 'Perfil' },
+  { to: '/history', icon: History, label: 'Historial' },
+  { to: '/progress', icon: LineChart, label: 'Progreso' },
 ];
 
 export function BottomNav() {
