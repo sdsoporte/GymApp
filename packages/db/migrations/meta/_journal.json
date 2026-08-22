@@ -22,6 +22,13 @@
       "when": 1787259434445,
       "tag": "0002_mixed_thunderbird",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787271798487,
+      "tag": "0003_acoustic_juggernaut",
+      "breakpoints": true
     }
   ]
 }
