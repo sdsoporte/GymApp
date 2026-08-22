@@ -223,6 +223,7 @@ export function RoutineForm({ routine, onSubmit, isPending }: RoutineFormProps) 
                   catalog.data.items.map((item) => (
                     <div
                       key={item.id}
+                      data-testid="exercise-picker-result"
                       className="flex gap-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-2"
                     >
                       <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--color-muted)]">
