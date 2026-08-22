@@ -93,16 +93,16 @@ flowchart TB
 | Servicio | Contenedor | Redes | Exposición |
 | --- | --- | --- | --- |
 | `gymapp-web` | React + Vite SSR/static | `proxy-net` | `gymapp.elautomata.com` vía Traefik |
-| `gymapp-api` | Hono + tRPC | `proxy-net`, `devaai_services-prod` | `api.gymapp.elautomata.com` vía Traefik |
-| `gymapp-assets` | NGINX sirviendo GIFs/imágenes | `proxy-net` | `assets.gymapp.elautomata.com` vía Traefik |
+| `gymapp-api` | Hono + tRPC | `proxy-net`, `devaai_services-prod` | `api-gymapp.elautomata.com` vía Traefik |
+| `gymapp-assets` | NGINX sirviendo GIFs/imágenes | `proxy-net` | `assets-gymapp.elautomata.com` vía Traefik |
 
 ### Dominios propuestos
 
 | Servicio | Host sugerido |
 | --- | --- |
 | Web app | `gymapp.elautomata.com` |
-| API | `api.gymapp.elautomata.com` |
-| Assets estáticos | `assets.gymapp.elautomata.com` |
+| API | `api-gymapp.elautomata.com` |
+| Assets estáticos | `assets-gymapp.elautomata.com` |
 
 Nombre corto, descriptivo y fácil de recordar. Alternativas: `recomp.elautomata.com` o `entrena.elautomata.com`.
 

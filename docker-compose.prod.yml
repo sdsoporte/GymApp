@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
-        VITE_ASSETS_URL: ${VITE_ASSETS_URL:-https://assets.gymapp.elautomata.com/exercises}
+        VITE_ASSETS_URL: ${VITE_ASSETS_URL:-https://assets-gymapp.elautomata.com/exercises}
     networks:
       - proxy-net
     labels:
@@ -21,7 +21,7 @@ services:
     environment:
       PORT: 3000
       DATABASE_URL: ${DATABASE_URL}
-      ASSETS_URL: ${ASSETS_URL:-https://assets.gymapp.elautomata.com/exercises}
+      ASSETS_URL: ${ASSETS_URL:-https://assets-gymapp.elautomata.com/exercises}
       METRICS_ENABLED: ${METRICS_ENABLED:-false}
       METRICS_PORT: 3001
     networks:
@@ -31,7 +31,7 @@ services:
       - "3001"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gymapp-api.rule=Host(`api.gymapp.elautomata.com`)"
+      - "traefik.http.routers.gymapp-api.rule=Host(`api-gymapp.elautomata.com`)"
       - "traefik.http.routers.gymapp-api.entrypoints=web"
       - "traefik.http.services.gymapp-api.loadbalancer.server.port=3000"
       - "traefik.docker.network=proxy-net"
@@ -46,7 +46,7 @@ services:
       - proxy-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gymapp-assets.rule=Host(`assets.gymapp.elautomata.com`)"
+      - "traefik.http.routers.gymapp-assets.rule=Host(`assets-gymapp.elautomata.com`)"
       - "traefik.http.routers.gymapp-assets.entrypoints=web"
       - "traefik.http.services.gymapp-assets.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy-net"

@@ -4,7 +4,7 @@
 
 Target host: `nodo-a` (production VPS).
 Repository: `https://github.com/sdsoporte/GymApp.git`
-Domain: `https://api.gymapp.elautomata.com`
+Domain: `https://api-gymapp.elautomata.com`
 
 ## Preconditions
 
@@ -86,14 +86,14 @@ Domain: `https://api.gymapp.elautomata.com`
 
 ```bash
 # Public health endpoints must return 200
-curl -sf https://api.gymapp.elautomata.com/health
-curl -sf https://api.gymapp.elautomata.com/health/db
+curl -sf https://api-gymapp.elautomata.com/health
+curl -sf https://api-gymapp.elautomata.com/health/db
 
 # /metrics must NOT be reachable on the public port
-curl -sf https://api.gymapp.elautomata.com/metrics || test $? -eq 22
+curl -sf https://api-gymapp.elautomata.com/metrics || test $? -eq 22
 
 # Sample exercise media must be served by the assets container
-curl -sfI https://assets.gymapp.elautomata.com/exercises/videos/0001-2gPfomN.gif
+curl -sfI https://assets-gymapp.elautomata.com/exercises/videos/0001-2gPfomN.gif
 
 # Backup smoke tests
 ls -l /data/devaai/gymapp/backups/gymapp-*.dump

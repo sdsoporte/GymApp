@@ -88,7 +88,7 @@ The `assets` service bind-mounts `./assets/exercises` at
 `0001` is therefore available at:
 
 ```
-https://assets.gymapp.elautomata.com/exercises/videos/0001-2gPfomN.gif
+https://assets-gymapp.elautomata.com/exercises/videos/0001-2gPfomN.gif
 ```
 
 Media paths stored in the database are relative (`videos/0001-2gPfomN.gif`); the
