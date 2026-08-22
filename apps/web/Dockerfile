@@ -11,6 +11,8 @@ COPY apps/web ./apps/web
 COPY apps/api ./apps/api
 COPY packages/db ./packages/db
 COPY packages/shared ./packages/shared
+ARG VITE_ASSETS_URL
+ENV VITE_ASSETS_URL=${VITE_ASSETS_URL}
 RUN pnpm --filter @gymapp/web build
 
 # Serve stage

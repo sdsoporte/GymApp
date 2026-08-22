@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        VITE_ASSETS_URL: ${VITE_ASSETS_URL:-https://assets.gymapp.elautomata.com/exercises}
     networks:
       - proxy-net
     labels:
