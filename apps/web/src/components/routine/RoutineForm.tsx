@@ -4,10 +4,10 @@ import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { ExerciseCard } from '@/components/exercise/ExerciseCard';
 import { SearchBar } from '@/components/exercise/SearchBar';
+import { Badge } from '@/components/ui/badge';
 import { useDebounce } from '@/hooks/use-debounce';
-import { ArrowUp, ArrowDown, Trash2, X, Plus, Loader2 } from 'lucide-react';
+import { ArrowUp, ArrowDown, Trash2, X, Plus, Loader2, ImageOff } from 'lucide-react';
 
 type CatalogItem = {
   id: string;
@@ -66,6 +66,12 @@ const fields = [
   { key: 'targetRepsMax' as const, label: 'Rep máx', min: 1 },
   { key: 'restSeconds' as const, label: 'Descanso', min: 0 },
 ];
+
+function assetUrl(path: string | null) {
+  if (!path) return '';
+  const base = import.meta.env.VITE_ASSETS_URL || '/assets/exercises';
+  return `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+}
 
 export function RoutineForm({ routine, onSubmit, isPending }: RoutineFormProps) {
   const navigate = useNavigate();
@@ -215,9 +221,43 @@ export function RoutineForm({ routine, onSubmit, isPending }: RoutineFormProps) 
               <div className="mt-3 max-h-[60vh] space-y-2 overflow-y-auto">
                 {catalog.data?.items.length ? (
                   catalog.data.items.map((item) => (
-                    <button key={item.id} type="button" className="w-full text-left" onClick={() => add(item)}>
-                      <ExerciseCard exercise={item} />
-                    </button>
+                    <div
+                      key={item.id}
+                      className="flex gap-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-2"
+                    >
+                      <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--color-muted)]">
+                        {item.imageUrl ? (
+                          <img
+                            src={assetUrl(item.imageUrl)}
+                            alt={item.nameEs || item.name}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <ImageOff className="h-6 w-6 text-zinc-500" />
+                        )}
+                      </div>
+                      <div className="flex flex-1 flex-col justify-center">
+                        <h3 className="line-clamp-1 font-semibold">{item.nameEs || item.name}</h3>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {item.bodyPart ? <Badge>{item.bodyPart}</Badge> : null}
+                          {item.equipment ? <Badge>{item.equipment}</Badge> : null}
+                          {item.target ? <Badge>{item.target}</Badge> : null}
+                        </div>
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="mt-2 self-start"
+                          onClick={() => add(item)}
+                          aria-label={`Agregar ${item.nameEs || item.name} a la rutina`}
+                        >
+                          Agregar
+                        </Button>
+                      </div>
+                    </div>
                   ))
                 ) : (
                   <p className="py-4 text-center text-zinc-400">Sin resultados.</p>
