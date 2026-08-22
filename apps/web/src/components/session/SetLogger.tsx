@@ -81,10 +81,10 @@ export function SetLogger({ sessionId, exercise, sets, onLog, onDelete, isPendin
     setRpe('');
   };
 
-  const restSeconds = savedSetNumber === nextNumber ? exercise.restSeconds ?? 60 : 0;
+  const restSeconds = savedSetNumber != null ? exercise.restSeconds ?? 60 : 0;
 
   return (
-    <Card>
+    <Card data-testid="session-exercise">
       <CardContent className="space-y-3 p-3">
         <div className="flex items-center gap-3">
           {exercise.gifUrl ? (
@@ -138,7 +138,7 @@ export function SetLogger({ sessionId, exercise, sets, onLog, onDelete, isPendin
         </form>
 
         {restSeconds > 0 ? (
-          <RestTimer seconds={restSeconds} autoStart={savedSetNumber === nextNumber} />
+          <RestTimer seconds={restSeconds} autoStart={savedSetNumber != null} />
         ) : null}
       </CardContent>
     </Card>

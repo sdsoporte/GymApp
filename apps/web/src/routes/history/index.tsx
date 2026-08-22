@@ -68,7 +68,7 @@ function HistoryPage() {
       <div className="grid gap-3">
         {query.data.items.map((session) => (
           <Link key={session.id} to="/history/$id" params={{ id: session.id }}>
-            <Card className="transition-colors hover:border-[var(--color-primary)]">
+            <Card data-testid="history-session-row" className="transition-colors hover:border-[var(--color-primary)]">
               <CardContent className="flex flex-col gap-2 py-4">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">{fmtDate(session.completedAt)}</span>
