@@ -1,4 +1,8 @@
-# Local Pi runtime state
+# Playwright E2E artifacts
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/playwright/.cache/
+
 .atl/
 .pi/
 

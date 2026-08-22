@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsr generate && tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "e2e": "E2E=true TEST_DATABASE_URL=postgres://gymapp_e2e:gymapp_e2e@localhost:5433/gymapp_e2e playwright test",
+    "e2e:ui": "E2E=true TEST_DATABASE_URL=postgres://gymapp_e2e:gymapp_e2e@localhost:5433/gymapp_e2e playwright test --ui",
+    "e2e:install": "playwright install chromium"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.69.0",
@@ -27,6 +30,8 @@
   },
   "devDependencies": {
     "@gymapp/api": "workspace:*",
+    "@gymapp/db": "workspace:*",
+    "@playwright/test": "^1.51.0",
     "@tailwindcss/vite": "^4.3.3",
     "vite-plugin-pwa": "^1.3.0",
     "@tanstack/router-cli": "^1.114.27",

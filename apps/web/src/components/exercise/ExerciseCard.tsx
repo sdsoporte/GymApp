@@ -22,7 +22,7 @@ function assetUrl(path: string | null) {
 
 export function ExerciseCard({ exercise }: { exercise: Exercise }) {
   return (
-    <Link to="/catalog/$slug" params={{ slug: exercise.slug }}>
+    <Link to="/catalog/$slug" params={{ slug: exercise.slug }} data-testid="catalog-result">
       <Card className="flex gap-4 overflow-hidden transition-colors hover:border-[var(--color-primary)]">
         <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center bg-[var(--color-muted)]">
           {exercise.imageUrl ? (
