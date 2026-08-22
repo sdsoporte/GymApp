@@ -20,3 +20,6 @@ build/
 *.tsbuildinfo
 apps/web/src/routeTree.gen.ts
 
+# Local backup dumps
+backups/
+

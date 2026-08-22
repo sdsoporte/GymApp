@@ -54,16 +54,32 @@ Domain: `https://api.gymapp.elautomata.com`
    DATABASE_URL="$DATABASE_URL" pnpm -F @gymapp/db seed
    ```
 
-6. Validate compose configuration:
+6. Prepare the backups directory:
+
+   ```bash
+   sudo mkdir -p /data/devaai/gymapp/backups
+   sudo chown -R "$(whoami):$(whoami)" /data/devaai/gymapp/backups
+   export BACKUP_DIR="/data/devaai/gymapp/backups"
+   export BACKUP_DAYS="7"
+   ```
+
+7. Validate compose configuration:
 
    ```bash
    docker compose -f docker-compose.prod.yml config -q
    ```
 
-7. Build and start services:
+8. Build and start services:
 
    ```bash
    docker compose -f docker-compose.prod.yml up -d --build
+   ```
+
+9. Trigger a first backup to verify database connectivity:
+
+   ```bash
+   docker compose -f docker-compose.prod.yml exec backup /backup.sh
+   ls -l /data/devaai/gymapp/backups/gymapp-*.dump
    ```
 
 ## Smoke tests
@@ -78,6 +94,10 @@ curl -sf https://api.gymapp.elautomata.com/metrics || test $? -eq 22
 
 # Sample exercise media must be served by the assets container
 curl -sfI https://assets.gymapp.elautomata.com/exercises/videos/0001-2gPfomN.gif
+
+# Backup smoke tests
+ls -l /data/devaai/gymapp/backups/gymapp-*.dump
+cat /data/devaai/gymapp/backups/last_status   # Expected: 0
 
 # Exercise count in production must match the dataset
 docker compose -f docker-compose.prod.yml exec -T postgres \
