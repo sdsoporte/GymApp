@@ -2,6 +2,8 @@ export const testIds = {
   catalogResult: 'catalog-result',
   exercisePickerResult: 'exercise-picker-result',
   routineCard: 'routine-card',
+  sessionExercise: 'session-exercise',
+  historySessionRow: 'history-session-row',
 } as const;
 
 export const labels = {
@@ -15,4 +17,8 @@ export const labels = {
   saveRoutine: 'Guardar rutina',
   createRoutine: 'Crear rutina',
   addExercise: 'Agregar',
+  weightInputLabel: 'Peso (kg)',
+  repsInputLabel: 'Reps',
+  rpeInputLabel: 'RPE',
+  historyHeading: 'Historial',
 } as const;
