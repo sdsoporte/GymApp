@@ -52,6 +52,22 @@ services:
       - "traefik.http.services.gymapp-assets.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy-net"
 
+  backup:
+    image: postgres:16-alpine
+    container_name: gymapp-backup
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      BACKUP_DIR: /backups
+      BACKUP_DAYS: "7"
+    volumes:
+      - ${BACKUP_DIR:-./backups}:/backups
+      - ./scripts/backup.sh:/backup.sh:ro
+    command: >
+      sh -c "while true; do /backup.sh; sleep 86400; done"
+    networks:
+      - devaai_services-prod
+    restart: unless-stopped
+
 networks:
   proxy-net:
     external: true
